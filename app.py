@@ -1,5 +1,5 @@
 # This To-Do created by John07-noob
-# Sep/10/2020 v1, Sep/24/2020 v2, Okt/9/2020 v3
+# Sep/10/2020 v1, Sep/24/2020 v2, Okt/9/2020 v3, Okt/15/2020 v4
 from colorama import Fore, Back, Style, init
 from os import system, name
 from time import sleep
@@ -15,7 +15,7 @@ magenta = Fore.LIGHTMAGENTA_EX
 data = "todo" #file name
 
 def clear_screen():
-    x = system('clear')
+    return system('clear')
 
 def help_page():
     print(f"""{yellow}Welcome To Help Page.
@@ -34,16 +34,22 @@ def help_page():
             print(f"{red}Please Enter q")
 
 def list_item():
-    with open(f"{data}.txt", "r") as file:
-        print(f"{yellow}Your List of ToDo:")
-        print(f"{yellow}=================:")
-        print(file.read())
-    while True:
-        user = input(f"{cyan}Enter {yellow}({green}q{yellow}){cyan} to quit: {yellow}")
-        if user.lower() == "q":
-            break
-        else:
-            print(f"{red}Please insert q!")
+    try:
+        with open(f"{data}.txt", "r") as file:
+            print(f"{yellow}Your List of ToDo:")
+            print(f"{yellow}=================:")
+            print(file.read())
+        while True:
+            user = input(f"{cyan}Enter {yellow}({green}q{yellow}){cyan} to quit: {yellow}")
+            if user.lower() == "q":
+                clear_screen()
+                break
+            else:
+                print(f"{red}Please insert q!")
+    except FileNotFoundError:
+        clear_screen()
+        print(f"{red}Must Insert ToDo First!")
+        return input(f"{yellow}Press any key to continue....")
 
 def insert_item():
     print(f"{yellow}=====================")
@@ -56,6 +62,15 @@ def insert_item():
 
 def remove_item():
     while True:
+        try:
+            with open(f"{data}.txt", "r") as file:
+                print(f"{yellow}Your List (in case you forgot):")
+                print(f"{yellow}==============================:")
+                print(file.read())
+        except FileNotFoundError:
+            clear_screen()
+            print(f"{red}Must Insert ToDo First!")
+            return input(f"{yellow}Press any key to continue....")
         remove = input(f"{cyan}What you want to delete{yellow}({green}q{yellow}): ")
         if remove.lower() == "q":
             break
@@ -65,11 +80,12 @@ def remove_item():
             with open(f"{data}.txt", "w") as file:
                 for r in lines:
                     if r.strip("\n") != remove:
-                        file.write(r)                        
+                        file.write(r)
+            clear_screen()
 
 def shutdown():
     count = 0
-    for i in range(2):
+    for count in range(2):
         print(f"{red}Shutdown in {count}")
         sleep(1)
         clear_screen()
